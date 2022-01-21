@@ -1,0 +1,29 @@
+{
+  "name": "my-own-note-backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "tsc": "tsc",
+    "start": "ts-node app.ts"
+  },
+  "author": "Jii-Yeong",
+  "license": "ISC",
+  "dependencies": {
+    "@types/body-parser": "^1.19.2",
+    "@types/express": "^4.17.13",
+    "@types/express-session": "^1.17.4",
+    "@types/pg": "^8.6.4",
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "express-generator": "^4.16.1",
+    "express-pg-session": "^1.1.0",
+    "express-session": "^1.17.2",
+    "nodemon": "^2.0.15",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.5.5"
+  },
+  "description": ""
+}
