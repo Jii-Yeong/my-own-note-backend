@@ -4,7 +4,7 @@ import pageRouter from './page';
 import registerRouter from './register';
 const router = express.Router();
 
-router.use('/api/post', pageRouter);
+router.use('/api/page', pageRouter);
 router.use('/api/register', registerRouter);
 router.use('/api/login', loginRouter);
 
