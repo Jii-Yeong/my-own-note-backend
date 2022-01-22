@@ -37,27 +37,16 @@ pageRouter.post('/insert', (req, res) => {
 });
 
 pageRouter.post('/insert/content', (req, res) => {
-  const text: string = req.body.text;
+  const textList: Array<string> = req.body.text;
   const pageId = req.body.pageId;
-  const index = req.body.index;
-  client.query('select page_id from page_content where page_id = $1 and index = $2', [pageId, index], (err, result) => {
-    if (result.rows.length) {
-      client.query('update page_content set text = $1 where page_id = $2 and index = $3', [text, pageId, index], (err, _) => {
-        if (err) {
-          res.json({ 'status': 'failed' });
-          throw err;
-        }
-        res.json({ 'status': 'success' });
-      });
-    } else {
-      client.query('insert into public.page_content(page_id, text, index) VALUES ($1, $2, $3)', [pageId, text, index], (err, _) => {
-        if (err) {
-          res.json({ 'status': 'failed' });
-          throw err;
-        }
-        res.json({ 'status': 'success' })
+  client.query('delete from page_content where page_id = $1', [pageId], (err, _) => {
+    if (err) throw err;
+    textList.forEach((text, index) => {
+      client.query('insert into page_content(page_id, text, index) values ($1, $2, $3)', [pageId, text, index], (err, _) => {
+        if (err) throw err;
       })
-    }
+    })
+    res.json({ 'status' : 'success' });
   })
 });
 
