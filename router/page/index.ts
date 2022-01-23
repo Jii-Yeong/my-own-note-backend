@@ -1,5 +1,6 @@
 import express from 'express';
 import client from '../client';
+import { STYLE_LIST } from '../types/paeg';
 const pageRouter = express.Router();
 
 pageRouter.post('/select/all', (req, res) => {
@@ -14,13 +15,13 @@ pageRouter.post('/select/all', (req, res) => {
         pageId: row.id,
         pageName: row.title,
       }
-    })
+    });
     const pageList = {
       pages: page,
       count: page.length,
     }
     res.json(pageList);
-  })
+  });
 });
 
 pageRouter.post('/insert', (req, res) => {
@@ -33,19 +34,19 @@ pageRouter.post('/insert', (req, res) => {
       throw err;
     }
     res.json({ 'status': 'success' });
-  })
+  });
 });
 
 pageRouter.post('/insert/content', (req, res) => {
-  const textList: Array<string> = req.body.text;
+  const textList: Array<any> = req.body.textList;
   const pageId = req.body.pageId;
   client.query('delete from page_content where page_id = $1', [pageId], (err, _) => {
     if (err) throw err;
     textList.forEach((text, index) => {
-      client.query('insert into page_content(page_id, text, index) values ($1, $2, $3)', [pageId, text, index], (err, _) => {
+      client.query('insert into page_content(page_id, text, index, style) values ($1, $2, $3, $4)', [pageId, text.text, index, text.style], (err, _) => {
         if (err) throw err;
-      })
-    })
+      });
+    });
     res.json({ 'status' : 'success' });
   })
 });
@@ -60,8 +61,9 @@ pageRouter.post('/select/id', (req, res) => {
         return {
           text: row.text,
           index: row.index,
+          style: row.style,
         };
-      })
+      });
       const pageContent = {
         title: title,
         text: textList,
@@ -69,15 +71,15 @@ pageRouter.post('/select/id', (req, res) => {
       }
       res.json(pageContent);
     }
-  })
+  });
 })
 
-pageRouter.delete('/delete/index', (req, res) => {
-  const index = req.query.index;
-  client.query('delete from page_content where index = $1', [index], (err, _) => {
+pageRouter.delete('/delete', (req, res) => {
+  const pageId = req.query.pageId;
+  client.query('delete from page where id = $1', [pageId], (err, _) => {
     if (err) throw err;
     res.json({ 'status' : 'success' })
-  })
+  });
 })
 
 export default pageRouter;
