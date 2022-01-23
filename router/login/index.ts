@@ -6,19 +6,17 @@ const loginRouter = express.Router();
 loginRouter.post('/', (req, res) => {
   const id = req.body.id;
   const password = req.body.password;
-  client.query('select * from public.user where id = $1', [id], (err, rows) => {
-    if (rows) {
-      if (rows.rows[0].id === id) {
-        client.query('select * from public.user where password = $1', [password], (err, rows) => {
-          if (rows) {
-            res.json({'id': id});
-          } else {
-            res.json({'result': 'pwfalse'});
+  client.query('select * from public.user where id = $1', [id], (err, result) => {
+    if (result.rows.length) {
+      if (result.rows[0].id === id) {
+        client.query('select * from public.user where password = $1', [password], (err, result) => {
+          if (result && result.rows[0]) {
+            res.json({'id': id, 'nickname': result.rows[0].nickname});
           }
         })
       }
     } else {
-      res.json({'result': 'idfalse'});
+      res.json({'loginError': 'failed'});
     }
   })
 })
