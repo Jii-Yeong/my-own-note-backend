@@ -1,0 +1,1 @@
+export type STYLE_LIST = Array<Array<{[key: string]: string}>>;
